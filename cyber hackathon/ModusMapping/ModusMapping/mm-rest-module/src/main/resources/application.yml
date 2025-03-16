@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ModusMapping
+
+  config:
+    import:
+      - database.yml
