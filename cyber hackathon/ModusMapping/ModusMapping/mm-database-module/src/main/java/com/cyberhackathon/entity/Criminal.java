@@ -4,11 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.neo4j.core.schema.Node;
 
 import java.util.Date;
 
 @Entity
 @Table(name = "criminals")
+@Node("Criminal")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
