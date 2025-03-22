@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-@Slf4j
+//@Slf4j
 public class DatabaseSyncAspect {
 
     private final CriminalNeo4jRepository neo4jRepository;
@@ -23,7 +23,7 @@ public class DatabaseSyncAspect {
     public void syncToNeo4j(JoinPoint joinPoint, Object savedEntity) {
         if (savedEntity != null && savedEntity.getClass().getSimpleName().equals("Criminal")) {
             neo4jRepository.save((Criminal) savedEntity);
-            log.info("✅ Synced {} to Neo4j!", savedEntity.getClass().getSimpleName());
+//            log.info("✅ Synced {} to Neo4j!", savedEntity.getClass().getSimpleName());
         }
     }
 }

@@ -9,9 +9,6 @@ import java.util.Date;
 
 @Entity
 @Table(name = "crimes")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class Crime {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,5 +28,53 @@ public class Crime {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getCrimeType() {
+        return crimeType;
+    }
+
+    public void setCrimeType(String crimeType) {
+        this.crimeType = crimeType;
+    }
+
+    public Date getCrimeDate() {
+        return crimeDate;
+    }
+
+    public void setCrimeDate(Date crimeDate) {
+        this.crimeDate = crimeDate;
+    }
+
+    public Case getCriminalCase() {
+        return criminalCase;
+    }
+
+    public void setCriminalCase(Case criminalCase) {
+        this.criminalCase = criminalCase;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
 
