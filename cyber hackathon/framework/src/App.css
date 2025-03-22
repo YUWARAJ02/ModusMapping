@@ -1,0 +1,53 @@
+.app-container {
+  display: grid;
+  grid-template-columns: 15rem 1fr; /* Sidebar Expanded */
+  grid-template-rows: 5rem calc(100vh - 5rem);
+  grid-template-areas: 
+    "header header"
+    "nav main";
+  transition: grid-template-columns 0.3s ease-in-out; /* Smooth transition */
+}
+
+/* When sidebar is collapsed */
+.app-container.collapsed {
+  grid-template-columns: 5rem auto; /* Shrink sidebar */
+}
+
+header {
+  grid-area: header;
+  background-color: blue;
+}
+
+.content {
+  grid-area: main;
+  background-color: #7ad6eb;
+  display: grid;
+  height: 100%; /* Take full height of the grid cell */
+  width: 100%; /* Take full width of the grid cell */
+  position: relative; /* Positioning for absolute image */
+  overflow: auto; /* Prevent overflow issues */
+  padding: 2;
+}
+/* Center only the image without affecting other elements */
+.bg-image-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+.bg-image {
+  
+  width: 20rem;
+  height: 20rem;
+  object-fit: contain; /* Ensures full coverage without distortion */
+  opacity: 0.3; /* Adjust transparency */
+  z-index: 0; /* Keep it behind content */
+}
+
+/* Adjust column size when sidebar collapses */
+@media (max-width: 768px) {
+  .app-container {
+    grid-template-columns: 5rem auto; /* Sidebar collapsed */
+  }
+}

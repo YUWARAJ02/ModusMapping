@@ -1,0 +1,90 @@
+nav {
+    grid-area: nav;
+    display: flex;
+    flex-direction: column;
+    background-color: #1f2937;
+    height: calc(100vh - 5rem);
+    width: 15rem; /* Default width */
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+}
+
+/* When sidebar collapses */
+nav.collapsed {
+    width: 5rem;
+}
+
+/* Menu icon styling */
+.menu-icon {
+    align-self: flex-start;
+    font-size: 24px;
+    color: white;
+    cursor: pointer;
+    margin: 15px;
+    background-color: #374151;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+.menu-icon:hover {
+    background-color: #475569;
+}
+
+/* Menu list styles */
+.menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.menu-list li {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    transition: background 0.3s ease-in-out;
+}
+
+.menu-list li a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s ease-in-out;
+}
+
+/* Hover effect */
+.menu-list li a:hover {
+    background-color: #374151;
+}
+
+/* Hide menu text when collapsed */
+nav.collapsed .menu-text {
+    display: none;
+}
+
+/* Center icons in collapsed mode */
+nav.collapsed .menu-list li {
+    justify-content: center;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    nav {
+        width: 5rem;
+    }
+
+    nav.collapsed {
+        width: 0;
+    }
+
+    .menu-text {
+        display: none;
+    }
+}

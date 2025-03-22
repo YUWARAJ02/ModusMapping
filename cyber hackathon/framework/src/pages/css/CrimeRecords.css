@@ -1,0 +1,89 @@
+.crime-records-container {
+    padding: 20px;
+    grid-row: 300rem 1fr;
+    overflow-y: auto;
+}
+
+.crime-record-header {
+    grid-area: crimeheader;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    background-color: white; /* Match background to avoid overlap */
+    padding: 10px;
+    z-index: 2;
+    border-bottom: 2px solid #ddd; /* Optional: Adds a subtle separation */
+}
+
+
+.table-wrapper {
+    grid-area: crimetable;
+    flex-grow: 1;
+    overflow-y: auto;
+    max-height: 70vh; /* Adjust as needed */
+}
+
+.table-wrapper {
+    max-height: 500px; /* Adjust height as needed */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+/* Table styles */
+.crime-table {
+    width: 100%;
+    border-collapse: collapse;
+    overflow-y: auto;
+    margin-top: 20px;
+}
+
+.crime-table th, .crime-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap; /* Prevents text from breaking into new lines */
+}
+
+.crime-table th {
+    background-color: #1f2937; /* Match sidebar & header */
+    color: white;
+    position: sticky;
+    top: 0; /* Matches the height of the main header */
+    z-index: 3; /* Ensure it stays above other content */
+}
+
+.crime-table tr {
+    background-color: white; /* Uniform row background */
+}
+
+/* No records message */
+.no-records {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    margin-top: 20px;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 10px;
+}
+
+.pagination li {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #1f2937;
+    color: #1f2937;
+    background: white;
+    border-radius: 5px;
+}
+
+.pagination .active {
+    background-color: #1f2937;
+    color: white;
+    font-weight: bold;
+}

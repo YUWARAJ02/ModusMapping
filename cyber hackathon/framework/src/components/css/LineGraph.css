@@ -1,0 +1,55 @@
+/* Container of the graph */
+.line-graph-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.line-graph-header{
+color: black;
+}
+.date-filter {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  width: 100%;
+  gap: 15px; /* Add some gap between the inputs */
+  padding: 10px 0; /* Adjust padding */
+  background-color: #f9fafb; /* Background color for date filter area */
+}
+
+.date-filter label {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #333;
+}
+
+.date-filter input {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.date-filter button {
+  background-color: #1f2937;
+  color: white;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.date-filter button:hover {
+  background-color: #333;
+}
+
+/* Wrapper for the line chart */
+.chart-wrapper {
+  width: 100%; /* Ensure it takes the full width of its container */
+  height: 100%;
+  flex-grow: 1; /* Allow it to take up the remaining space in its parent */
+  max-height: 400px; /* Optional, adjust as needed */
+}

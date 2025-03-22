@@ -1,0 +1,59 @@
+.top-header {
+    grid-area: header;
+    position: sticky;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Pushes items to edges */
+    background-color: #1f2937; /* Same as sidebar */
+    color: white;
+    padding: 0 20px;
+    height: 100%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* More visible shadow */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Light border */
+  z-index: 10;
+  }
+  
+  .title {
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+  
+  .login-btn {
+    background-color: white;
+    color: #1f2937;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .login-btn:hover {
+    background-color: #e5e7eb;
+  }
+  
+  .login-btn.signed-in {
+    background-color: #fbbf24;
+    color: #1f2937;
+    text-transform: uppercase;
+    border-radius: 50px;
+  }
+  
+  /* Mobile styling */
+  @media (max-width: 768px) {
+    .top-header {
+      padding: 0 10px;
+    }
+  
+    .title {
+      font-size: 1.5rem;
+    }
+  
+    .login-btn {
+      padding: 8px 15px;
+      font-size: 12px;
+    }
+  }
+  
