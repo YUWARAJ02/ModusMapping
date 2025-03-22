@@ -11,7 +11,7 @@ services:
       AI_SERVICE_URL: http://ai-service:8000  # Internal Docker network access
 
   ai-service:
-    build: ./ai-service
+    build: .
     ports:
       - "8000:8000"
     expose:
