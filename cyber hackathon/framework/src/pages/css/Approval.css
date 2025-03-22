@@ -1,0 +1,102 @@
+/* Approval Page Container */
+.approval-container {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Table Container */
+.approval-table-container {
+    max-height: 500px; /* Adjust as needed */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+/* Table Styles */
+.approval-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.approval-table th, .approval-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.approval-table th {
+    background-color: #1f2937;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+.approval-table tr {
+    background-color: white;
+}
+
+/* Buttons */
+.approve-btn {
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.approve-btn:hover {
+    background-color: #218838;
+}
+
+.reject-btn {
+    background-color: #dc3545; /* Red */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.reject-btn:hover {
+    background-color: #c82333;
+}
+
+.report-btn {
+    background-color: #007acc;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.report-btn:hover {
+    background-color: #005b99;
+}
+
+/* Status Text */
+.status {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.status.Approved {
+    color: #28a745;
+}
+
+.status.Rejected {
+    color: #dc3545;
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    margin-top: 20px;
+}

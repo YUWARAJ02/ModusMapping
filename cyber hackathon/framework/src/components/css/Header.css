@@ -18,7 +18,7 @@
     font-weight: bold;
   }
   
-  .login-btn {
+  .logout-btn {
     background-color: white;
     color: #1f2937;
     border: none;
@@ -30,11 +30,11 @@
     transition: all 0.3s ease;
   }
   
-  .login-btn:hover {
+  .logout-btn:hover {
     background-color: #e5e7eb;
   }
   
-  .login-btn.signed-in {
+  .logout-btn.signed-in {
     background-color: #fbbf24;
     color: #1f2937;
     text-transform: uppercase;

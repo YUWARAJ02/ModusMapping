@@ -1,0 +1,53 @@
+.case-report-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 100%;
+    margin: auto;
+    overflow-y: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .case-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+  }
+  
+  .status {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .status.open {
+    background-color: green;
+    color: white;
+  }
+  
+  .status.closed {
+    background-color: red;
+    color: white;
+  }
+  
+  .case-details, .crime-section, .criminals-section, .evidence-section {
+    margin-top: 20px;
+  }
+  
+  h3 {
+    background: #007acc;
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+  }
+  
+  .crime-item, .criminal-item, .evidence-item {
+    border-left: 4px solid #007acc;
+    padding: 10px;
+    margin-top: 10px;
+    background: #f9f9f9;
+    border-radius: 5px;
+  }
+  

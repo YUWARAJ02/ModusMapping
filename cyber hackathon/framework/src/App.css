@@ -7,7 +7,15 @@
     "nav main";
   transition: grid-template-columns 0.3s ease-in-out; /* Smooth transition */
 }
-
+/* Layout when NOT logged in */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #82c9de; /* Match theme */
+}
 /* When sidebar is collapsed */
 .app-container.collapsed {
   grid-template-columns: 5rem auto; /* Shrink sidebar */
@@ -20,7 +28,7 @@ header {
 
 .content {
   grid-area: main;
-  background-color: #7ad6eb;
+  background-color: white;
   display: grid;
   height: 100%; /* Take full height of the grid cell */
   width: 100%; /* Take full width of the grid cell */

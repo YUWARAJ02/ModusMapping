@@ -22,7 +22,7 @@ transition: grid-template-columns 0.3s ease-in-out; /* Smooth transition */
     text-align: center;
     font-size: 18px;
     font-weight: bold;
-    color: white;
+    color: black;
   }
   
   /* Unique background colors for each section */

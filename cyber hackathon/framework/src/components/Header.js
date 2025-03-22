@@ -1,17 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./css/Header.css";
 
-const Header = () => {
-  const [signedIn, setSignedIn] = useState(false);
+const Header = ({ isLoggedIn, setIsLoggedIn }) => {
+  const navigate = useNavigate();
+
+  const handleAuthClick = () => {
+    if (isLoggedIn) {
+      setIsLoggedIn(false);
+      navigate("/login");
+    } else {
+      navigate("/login");
+    }
+  };
 
   return (
     <header className="top-header">
       <h1 className="title">ModusMapping</h1>
-      <button 
-        className={`login-btn ${signedIn ? "signed-in" : ""}`} 
-        onClick={() => setSignedIn(!signedIn)}
-      >
-        {signedIn ? "User" : "Login"}
+      <button className={`logout-btn ${isLoggedIn ? "signed-in" : ""}`} onClick={handleAuthClick}>
+        {isLoggedIn ? "Logout" : "Login"}
       </button>
     </header>
   );

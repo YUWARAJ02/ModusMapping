@@ -1,0 +1,111 @@
+/* Case Reports Container */
+.page-container {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+/* Header */
+h2 {
+    text-align: center;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    padding: 10px;
+    z-index: 2;
+    border-bottom: 2px solid #ddd;
+}
+
+/* Filter Container */
+.filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.filter-input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 200px;
+}
+
+/* Table Wrapper */
+.case-table-container {
+    max-height: 500px; /* Adjust height as needed */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+}
+
+/* Case Table */
+.case-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.case-table th, .case-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.case-table th {
+    background-color: #1f2937;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+}
+
+/* No data message */
+.no-data {
+    text-align: center;
+    font-size: 18px;
+    color: #888;
+    padding: 20px;
+}
+
+/* View Report Button */
+.report-btn {
+    padding: 8px 12px;
+    background: #007acc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.report-btn:hover {
+    background: #005b99;
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+.pagination button {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid #1f2937;
+    color: #1f2937;
+    background: white;
+    border-radius: 5px;
+}
+
+.pagination button:hover {
+    background-color: #1f2937;
+    color: white;
+}
+
+.pagination span {
+    padding: 10px;
+    font-weight: bold;
+}
