@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import Header from "./components/Header";
 import Login from "./pages/Login";
@@ -18,16 +18,32 @@ import Chatbot from "./pages/ChatBot";
 import CaseRegistration from "./pages/CaseRegistration";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Get login status from session storage
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return sessionStorage.getItem("isLoggedIn") === "true";
+  });
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  // Function to handle login
+  const handleLogin = () => {
+    sessionStorage.setItem("isLoggedIn", "true");
+    setIsLoggedIn(true);
+  };
+
+  // Function to handle logout
+  const handleLogout = () => {
+    sessionStorage.setItem("isLoggedIn", "false");
+    setIsLoggedIn(false);
+  };
 
   return (
     <div className={isLoggedIn ? `app-container ${sidebarOpen ? "" : "collapsed"}` : "login-container"}>
-      {isLoggedIn && <Header isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />}
+      {isLoggedIn && <Header isLoggedIn={isLoggedIn} setIsLoggedIn={handleLogout} />}
 
       {!isLoggedIn ? (
         <Routes>
-          <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+          <Route path="/login" element={<Login setIsLoggedIn={handleLogin} />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       ) : (
