@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "crimes")
@@ -28,6 +30,14 @@ public class Crime {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @ManyToMany
+    @JoinTable(
+            name = "crime_criminal",
+            joinColumns = @JoinColumn(name = "crime_id"),
+            inverseJoinColumns = @JoinColumn(name = "criminal_id")
+    )
+    private Set<Criminal> criminals = new HashSet<>();
 
     public String getDescription() {
         return description;
@@ -75,6 +85,14 @@ public class Crime {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<Criminal> getCriminals() {
+        return criminals;
+    }
+
+    public void setCriminals(Set<Criminal> criminals) {
+        this.criminals = criminals;
     }
 }
 

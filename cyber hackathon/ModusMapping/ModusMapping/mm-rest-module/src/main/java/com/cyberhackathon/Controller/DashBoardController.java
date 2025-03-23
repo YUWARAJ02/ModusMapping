@@ -1,7 +1,9 @@
 package com.cyberhackathon.Controller;
 
 import com.cyberhackathon.contract.dashboard.BarGraphData;
-import com.cyberhackathon.service.BarGraphService;
+import com.cyberhackathon.contract.dashboard.LineChart;
+import com.cyberhackathon.contract.dashboard.PieChartData;
+import com.cyberhackathon.service.GraphService;
 import com.cyberhackathon.repository.jpa.CrimeRepository;
 import com.cyberhackathon.service.CriminalService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,7 +30,7 @@ public class DashBoardController {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private BarGraphService barGraphService;
+    private GraphService graphService;
 
     @GetMapping("criminal-type")
     @ResponseBody
@@ -39,6 +41,16 @@ public class DashBoardController {
 
     @GetMapping("/barGraphData")
     public ResponseEntity<List<BarGraphData>> getBarGraphData(@RequestParam final String fromDate, @RequestParam final String toDate) throws ParseException {
-        return new ResponseEntity<>(barGraphService.getBarGraphData(fromDate,toDate),HttpStatus.OK);
+        return new ResponseEntity<>(graphService.getBarGraphData(fromDate,toDate),HttpStatus.OK);
+    }
+
+    @GetMapping("/lineChartData")
+    public ResponseEntity<List<LineChart>> getLineChartData(@RequestParam final String fromDate, @RequestParam final String toDate) throws ParseException {
+        return new ResponseEntity<>(graphService.getLineChartData(fromDate,toDate),HttpStatus.OK);
+    }
+
+    @GetMapping("/pieChartData")
+    public ResponseEntity<List<PieChartData>> getPieChartData(@RequestParam final String fromDate, @RequestParam final String toDate) throws ParseException {
+        return new ResponseEntity<>(graphService.getPieChartData(fromDate,toDate),HttpStatus.OK);
     }
 }

@@ -23,5 +23,19 @@ public interface CrimeRepository extends JpaRepository<Crime, Long> {
     List<Object[]> findCrimesGroupedByTypeAndLocation(
             @Param("startDate") Date startDate,
             @Param("endDate") Date endDate);
+
+
+    @Query("SELECT c.crimeDate, c.location, COUNT(c) " +
+            "FROM Crime c " +
+            "WHERE c.crimeDate BETWEEN :startDate AND :endDate " +
+            "GROUP BY c.crimeDate, c.location")
+    List<Object[]> findCrimesGroupedByLocation(@Param("startDate") Date startDate,
+                                               @Param("endDate") Date endDate);
+
+    @Query("SELECT c " +
+            "FROM Crime c " +
+            "WHERE c.crimeDate BETWEEN :startDate AND :endDate ")
+    List<Crime> findCrimesByOfficerAndCriminal(@Param("startDate") Date startDate,
+                                          @Param("endDate") Date endDate);
 }
 

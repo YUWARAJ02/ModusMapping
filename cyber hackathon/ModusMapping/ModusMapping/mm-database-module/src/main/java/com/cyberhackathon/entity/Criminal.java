@@ -6,6 +6,8 @@ import lombok.*;
 import org.springframework.data.neo4j.core.schema.Node;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "criminals")
@@ -32,6 +34,9 @@ public class Criminal {
 
     @Column(name = "criminal_history")
     private String criminalHistory;
+
+    @ManyToMany(mappedBy = "criminals")
+    private Set<Crime> crimes = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -100,6 +105,14 @@ public class Criminal {
     }
     public Criminal() {
 
+    }
+
+    public Set<Crime> getCrimes() {
+        return crimes;
+    }
+
+    public void setCrimes(Set<Crime> crimes) {
+        this.crimes = crimes;
     }
 }
 
