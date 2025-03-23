@@ -1,0 +1,72 @@
+/* Container for the Pie Chart */
+.pie-chart-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+  
+  /* Header Styling */
+  .pie-chart-header {
+    color: black;
+    position: relative;
+  }
+  
+  /* Date Filter Section */
+  .date-filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    width: 100%;
+    gap: 15px; /* Add space between inputs */
+    padding: 10px 0; /* Adjust padding */
+    background-color: #f9fafb; /* Light background like LineGraph */
+  }
+  
+  .date-filter label {
+    margin-right: 10px;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .date-filter input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .date-filter button {
+    background-color: #1f2937;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .date-filter button:hover {
+    background-color: #333;
+  }
+  
+  /* Wrapper for the Pie Chart */
+  .chart-wrapper {
+    width: 100%;
+    height: 100%;
+    flex-grow: 1; /* Allow it to take up the remaining space */
+    max-height: 400px; /* Prevent excessive growth */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Ensure the Pie Chart scales properly */
+  .pie-chart-container canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  

@@ -109,3 +109,19 @@ h2 {
     padding: 10px;
     font-weight: bold;
 }
+/* Register Case Button */
+.register-case-btn {
+    padding: 10px 15px;
+    background: #007acc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.register-case-btn:hover {
+    background: #005b99;
+}
+

@@ -38,6 +38,8 @@ const CaseReports = () => {
   return (
     <div className="page-container">
       <h2>Case Reports</h2>
+{/* Register Case Button */}
+
 
       {/* Filters */}
       <div className="filter-container">
@@ -55,6 +57,10 @@ const CaseReports = () => {
           value={criminalNameFilter}
           onChange={(e) => setCriminalNameFilter(e.target.value)}
         />
+  <button className="register-case-btn" onClick={() => navigate("/case-registration")}>
+    Register New Case
+  </button>
+
       </div>
 
       {/* Case Table */}

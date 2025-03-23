@@ -8,6 +8,7 @@
   align-items: flex-start;
 }
 .line-graph-header{
+  position: relative;
 color: black;
 }
 .date-filter {

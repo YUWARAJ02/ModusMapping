@@ -1,0 +1,62 @@
+.case-registration-container {
+    max-width: 600px;
+    width: 50%;
+    margin: auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  input, select, textarea {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+  
+  .submit-btn, .ai-summary-btn {
+    margin-top: 15px;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .submit-btn {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .ai-summary-btn {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .ai-summary-box {
+    background: #f8f9fa;
+    padding: 10px;
+    border-left: 5px solid #007bff;
+    margin-top: 15px;
+  }
+  

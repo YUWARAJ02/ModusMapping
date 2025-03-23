@@ -14,6 +14,8 @@ import Settings from "./pages/Settings";
 import SideBar from "./components/SideBar";
 import Approval from "./pages/Approval";
 import "./App.css";
+import Chatbot from "./pages/ChatBot";
+import CaseRegistration from "./pages/CaseRegistration";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -38,13 +40,13 @@ function App() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/crime-records" element={<CrimeRecords />} />
-              <Route path="/crime-trends" element={<CrimeTrends />} />
+              <Route path="/chat-bot" element={<Chatbot />} />
               <Route path="/criminal-network" element={<CriminalNetwork />} />
               <Route path="/case-reports" element={<CaseReports />} />
               <Route path="/case/:caseId" element={<CaseReport />} />
               <Route path="/approval" element={<Approval />} />
               <Route path="/user-management" element={<UserManagement />} />
-              <Route path="/settings" element={<Settings />} />
+              <Route path="/case-registration" element={<CaseRegistration />} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </div>

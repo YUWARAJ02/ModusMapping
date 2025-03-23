@@ -11,7 +11,7 @@
     top: 0;
     background-color: white; /* Match background to avoid overlap */
     padding: 10px;
-    z-index: 2;
+    z-index: 5;
     border-bottom: 2px solid #ddd; /* Optional: Adds a subtle separation */
 }
 

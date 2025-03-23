@@ -73,7 +73,7 @@ const BarGraph = () => {
 
   return (
     <div className="bar-graph-container">
-      <h2>Crime Counts by Type & Date</h2>
+      <h2 className="bargraph-title">Crime Counts by Type & Date</h2>
 
       {/* Filters */}
       <div className="filter-container">

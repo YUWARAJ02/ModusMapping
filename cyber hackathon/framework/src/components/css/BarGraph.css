@@ -7,6 +7,8 @@
     padding: 15px;
   }
   .bargraph-title{
+    
+    position: relative;
     color: black;
   }
   
