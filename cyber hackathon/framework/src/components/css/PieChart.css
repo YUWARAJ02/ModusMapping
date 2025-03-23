@@ -56,7 +56,6 @@
     width: 100%;
     height: 100%;
     flex-grow: 1; /* Allow it to take up the remaining space */
-    max-height: 400px; /* Prevent excessive growth */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -64,8 +63,7 @@
   
   /* Ensure the Pie Chart scales properly */
   .pie-chart-container canvas {
-    width: 100% !important;
-    height: 100% !important;
+ 
     max-width: 100%;
     max-height: 100%;
   }

@@ -1,35 +1,68 @@
 import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
-import Select from "react-select"; // Import react-select for dropdown
+import Select from "react-select";
+// import axios from "axios"; // Commented out API call
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
-import "./css/BarGraph.css"
+import "./css/BarGraph.css";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarGraph = () => {
-  const dummyData = [
-    { date: "2024-03-01", location: "Location 1", crimeType: "Theft", count: 5 },
-    { date: "2024-03-01", location: "Location 2", crimeType: "Murder", count: 3 },
-    { date: "2024-03-02", location: "Location 3", crimeType: "Assault", count: 7 },
-    { date: "2024-03-02", location: "Location 4", crimeType: "Fraud", count: 4 },
-    { date: "2024-03-03", location: "Location 5", crimeType: "Theft", count: 6 },
-    { date: "2024-03-03", location: "Location 6", crimeType: "Murder", count: 2 },
-    { date: "2024-03-04", location: "Location 7", crimeType: "Assault", count: 5 },
-    { date: "2024-03-04", location: "Location 1", crimeType: "Fraud", count: 8 },
+  // Dummy data (same format as API response)
+  const dummyCrimeData = [
+    { date: "2024-03-05 05:30:00.0", location: "Robbery", crimeType: "T. Nagar, Chennai", count: 1 },
+    { date: "2024-02-15 05:30:00.0", location: "Kidnapping", crimeType: "Madurai Central", count: 1 },
+    { date: "2024-01-20 05:30:00.0", location: "Cyber Crime", crimeType: "Coimbatore IT Hub", count: 1 },
   ];
 
-  const [startDate, setStartDate] = useState("2024-03-01");
-  const [endDate, setEndDate] = useState("2024-03-06");
-  const allCrimeTypes = [...new Set(dummyData.map((item) => item.crimeType))]; // Extract unique crime types
-  const [selectedCrimeTypes, setSelectedCrimeTypes] = useState(allCrimeTypes);
+  const [crimeData, setCrimeData] = useState(dummyCrimeData); // Using dummy data
+  const [startDate, setStartDate] = useState("2024-01-20");
+  const [endDate, setEndDate] = useState("2024-03-20");
+  const [selectedCrimeTypes, setSelectedCrimeTypes] = useState([]);
   const [chartData, setChartData] = useState({ labels: [], datasets: [] });
+  const [loading, setLoading] = useState(false);
+  const [timeoutError, setTimeoutError] = useState(false);
 
   const crimeColors = {
-    Theft: "rgba(255, 99, 132, 0.8)",
-    Murder: "rgba(54, 162, 235, 0.8)",
-    Assault: "rgba(255, 206, 86, 0.8)",
-    Fraud: "rgba(75, 192, 192, 0.8)",
+    "Robbery": "rgba(255, 99, 132, 0.8)",
+    "Kidnapping": "rgba(54, 162, 235, 0.8)",
+    "Cyber Crime": "rgba(255, 206, 86, 0.8)",
   };
+
+  // Commented out API call
+  /*
+  const fetchCrimeData = async () => {
+    setLoading(true);
+    setTimeoutError(false);
+
+    const apiUrl = `http://localhost:8080/dashboard/barGraphData?fromDate=${startDate}&toDate=${endDate}`;
+    const source = axios.CancelToken.source();
+
+    // Set timeout of 20 seconds
+    const timeout = setTimeout(() => {
+      source.cancel();
+      setLoading(false);
+      setTimeoutError(true);
+    }, 20000);
+
+    try {
+      const response = await axios.get(apiUrl, { cancelToken: source.token });
+      clearTimeout(timeout);
+      setCrimeData(response.data);
+
+      const uniqueCrimeTypes = [...new Set(response.data.map((item) => item.location))];
+      setSelectedCrimeTypes(uniqueCrimeTypes);
+      setLoading(false);
+    } catch (error) {
+      if (axios.isCancel(error)) {
+        console.error("API request timed out.");
+      } else {
+        console.error("Error fetching crime data:", error);
+      }
+      setLoading(false);
+    }
+  };
+  */
 
   const handleDateChange = (e) => {
     const { name, value } = e.target;
@@ -42,21 +75,21 @@ const BarGraph = () => {
   };
 
   const filterData = () => {
-    const filteredData = dummyData.filter(
+    const filteredData = crimeData.filter(
       (item) =>
         item.date >= startDate &&
         item.date <= endDate &&
-        selectedCrimeTypes.includes(item.crimeType)
+        selectedCrimeTypes.includes(item.location)
     );
 
-    const dates = [...new Set(filteredData.map((item) => item.date))];
-    const crimeTypes = [...new Set(filteredData.map((item) => item.crimeType))];
+    const dates = [...new Set(filteredData.map((item) => item.date.split(" ")[0]))]; // Extract date only
+    const crimeTypes = [...new Set(filteredData.map((item) => item.location))];
 
     const datasets = crimeTypes.map((type) => ({
       label: type,
       backgroundColor: crimeColors[type] || "rgba(153, 102, 255, 0.8)",
       data: dates.map((date) => {
-        const crimesOnDate = filteredData.filter((item) => item.date === date && item.crimeType === type);
+        const crimesOnDate = filteredData.filter((item) => item.date.startsWith(date) && item.location === type);
         return crimesOnDate.reduce((sum, crime) => sum + crime.count, 0);
       }),
     }));
@@ -69,7 +102,7 @@ const BarGraph = () => {
 
   useEffect(() => {
     filterData();
-  }, [startDate, endDate, selectedCrimeTypes]);
+  }, [crimeData, startDate, endDate, selectedCrimeTypes]);
 
   return (
     <div className="bar-graph-container">
@@ -93,34 +126,43 @@ const BarGraph = () => {
         <div className="crime-type-filter">
           <span>Filter by Crime Type:</span>
           <Select
-            options={allCrimeTypes.map((type) => ({ value: type, label: type }))}
+            options={crimeData.length > 0 ? [...new Set(crimeData.map((item) => ({ value: item.location, label: item.location })))] : []}
             isMulti
-            defaultValue={allCrimeTypes.map((type) => ({ value: type, label: type }))}
+            defaultValue={crimeData.length > 0 ? [...new Set(crimeData.map((item) => ({ value: item.location, label: item.location })))] : []}
             onChange={handleCrimeTypeChange}
             className="crime-select"
           />
         </div>
 
-        <button onClick={filterData}>Apply Filter</button>
+        {/* Commented out API call in button */}
+        <button onClick={() => console.log("Fetching data...")}>Apply Filter</button>
       </div>
 
+      {/* Loading Indicator */}
+      {loading && <div className="loading-spinner">Loading data...</div>}
+
+      {/* Timeout Message */}
+      {timeoutError && <div className="error-message">Request timed out. Please try again.</div>}
+
       {/* Bar Chart */}
-      <div className="chart-wrapper">
-        <Bar
-          data={chartData}
-          options={{
-            responsive: true,
-            maintainAspectRatio: false, // Prevents overflow
-            scales: {
-              x: { title: { display: true, text: "Date" } },
-              y: { title: { display: true, text: "Total Crime Count" } },
-            },
-            plugins: {
-              legend: { position: "top" },
-            },
-          }}
-        />
-      </div>
+      {!loading && !timeoutError && (
+        <div className="chart-wrapper">
+          <Bar
+            data={chartData}
+            options={{
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: { title: { display: true, text: "Date" } },
+                y: { title: { display: true, text: "Total Crime Count" } },
+              },
+              plugins: {
+                legend: { position: "top" },
+              },
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };

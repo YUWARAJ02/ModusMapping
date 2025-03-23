@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { FaPaperPlane } from "react-icons/fa";
 import "./css/ChatBot.css"; 
 
-// Dummy responses (Replace with AI logic later)
 const databaseResponses = {
   "what are the case statuses": "Case statuses can be 'open' or 'closed'.",
   "list all officers": "Officers: John Doe, Jane Smith, Mark Lee.",
@@ -19,11 +18,9 @@ const ChatBot = () => {
   const handleSend = () => {
     if (!userInput.trim()) return;
 
-    // Append user message
     const userMessage = { sender: "user", text: userInput };
     setMessages((prev) => [...prev, userMessage]);
 
-    // Get bot response (Replace this with DistilBERT AI response)
     const botResponseText = databaseResponses[userInput.toLowerCase()] || "Sorry, I don't understand.";
     const botMessage = { sender: "bot", text: botResponseText };
 
