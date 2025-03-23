@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Bar } from "react-chartjs-2";
 import Select from "react-select";
-// import axios from "axios"; // Commented out API call
+import axios from "axios"; // Uncommented API call
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import "./css/BarGraph.css";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const BarGraph = () => {
-  // Dummy data (same format as API response)
-  const dummyCrimeData = [
-    { date: "2024-03-05 05:30:00.0", location: "Robbery", crimeType: "T. Nagar, Chennai", count: 1 },
-    { date: "2024-02-15 05:30:00.0", location: "Kidnapping", crimeType: "Madurai Central", count: 1 },
-    { date: "2024-01-20 05:30:00.0", location: "Cyber Crime", crimeType: "Coimbatore IT Hub", count: 1 },
-  ];
-
-  const [crimeData, setCrimeData] = useState(dummyCrimeData); // Using dummy data
+  const [crimeData, setCrimeData] = useState([]);
   const [startDate, setStartDate] = useState("2024-01-20");
   const [endDate, setEndDate] = useState("2024-03-20");
   const [selectedCrimeTypes, setSelectedCrimeTypes] = useState([]);
@@ -29,8 +22,6 @@ const BarGraph = () => {
     "Cyber Crime": "rgba(255, 206, 86, 0.8)",
   };
 
-  // Commented out API call
-  /*
   const fetchCrimeData = async () => {
     setLoading(true);
     setTimeoutError(false);
@@ -43,7 +34,7 @@ const BarGraph = () => {
       source.cancel();
       setLoading(false);
       setTimeoutError(true);
-    }, 20000);
+    }, 60000);
 
     try {
       const response = await axios.get(apiUrl, { cancelToken: source.token });
@@ -62,7 +53,6 @@ const BarGraph = () => {
       setLoading(false);
     }
   };
-  */
 
   const handleDateChange = (e) => {
     const { name, value } = e.target;
@@ -82,7 +72,7 @@ const BarGraph = () => {
         selectedCrimeTypes.includes(item.location)
     );
 
-    const dates = [...new Set(filteredData.map((item) => item.date.split(" ")[0]))]; // Extract date only
+    const dates = [...new Set(filteredData.map((item) => item.date.split(" ")[0]))];
     const crimeTypes = [...new Set(filteredData.map((item) => item.location))];
 
     const datasets = crimeTypes.map((type) => ({
@@ -101,8 +91,12 @@ const BarGraph = () => {
   };
 
   useEffect(() => {
+    fetchCrimeData();
+  }, [startDate, endDate]);
+
+  useEffect(() => {
     filterData();
-  }, [crimeData, startDate, endDate, selectedCrimeTypes]);
+  }, [crimeData, selectedCrimeTypes]);
 
   return (
     <div className="bar-graph-container">
@@ -134,8 +128,7 @@ const BarGraph = () => {
           />
         </div>
 
-        {/* Commented out API call in button */}
-        <button onClick={() => console.log("Fetching data...")}>Apply Filter</button>
+        <button onClick={fetchCrimeData}>Apply Filter</button>
       </div>
 
       {/* Loading Indicator */}

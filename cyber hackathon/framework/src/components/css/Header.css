@@ -35,7 +35,7 @@
   }
   
   .logout-btn.signed-in {
-    background-color: #fbbf24;
+    background-color: white;
     color: #1f2937;
     text-transform: uppercase;
     border-radius: 50px;

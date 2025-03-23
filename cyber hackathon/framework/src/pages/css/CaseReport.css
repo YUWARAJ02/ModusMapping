@@ -37,14 +37,14 @@
   }
   
   h3 {
-    background: #007acc;
+    background: #1f2937;
     color: white;
     padding: 8px;
     border-radius: 5px;
   }
   
   .crime-item, .criminal-item, .evidence-item {
-    border-left: 4px solid #007acc;
+    border-left: 4px solid #1f2937;
     padding: 10px;
     margin-top: 10px;
     background: #f9f9f9;

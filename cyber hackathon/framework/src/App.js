@@ -16,6 +16,7 @@ import Approval from "./pages/Approval";
 import "./App.css";
 import Chatbot from "./pages/ChatBot";
 import CaseRegistration from "./pages/CaseRegistration";
+import AboutUs from "./pages/AboutUs";
 
 function App() {
   // Get login status from session storage
@@ -63,6 +64,7 @@ function App() {
               <Route path="/approval" element={<Approval />} />
               <Route path="/user-management" element={<UserManagement />} />
               <Route path="/case-registration" element={<CaseRegistration />} />
+              <Route path="/about-us" element={<AboutUs/>} />
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </div>

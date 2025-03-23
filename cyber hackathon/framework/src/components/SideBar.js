@@ -16,7 +16,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         <li><Link to="/case-reports"><FaFileAlt /><span className="menu-text"> Case Reports</span></Link></li>
         <li><Link to="/user-management"><FaUsersCog /><span className="menu-text"> User Management</span></Link></li>
         <li><Link to="/approval"><FaCheckCircle /><span className="menu-text"> Approval</span></Link></li>
-        <li><Link to="/settings"><FaInfoCircle /><span className="menu-text"> AboutUs</span></Link></li>
+        <li><Link to="/about-us"><FaInfoCircle /><span className="menu-text"> AboutUs</span></Link></li>
       </ul>
     </nav>
   );

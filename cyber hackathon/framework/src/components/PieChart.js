@@ -6,32 +6,50 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = () => {
-  const dummyData = [
-    { date: "2024-03-01", crimeType: "Theft", officer: "Officer A", criminal: "Criminal X" },
-    { date: "2024-03-02", crimeType: "Murder", officer: "Officer B", criminal: "Criminal Y" },
-    { date: "2024-03-03", crimeType: "Assault", officer: "Officer A", criminal: "Criminal X" },
-    { date: "2024-03-04", crimeType: "Fraud", officer: "Officer C", criminal: "Criminal Z" },
-    { date: "2024-03-05", crimeType: "Theft", officer: "Officer B", criminal: "Criminal Y" },
-    { date: "2024-03-06", crimeType: "Murder", officer: "Officer D", criminal: "Criminal X" },
-    { date: "2024-03-07", crimeType: "Theft", officer: "Officer C", criminal: "Criminal Z" },
-  ];
-
-  const [startDate, setStartDate] = useState("2024-03-01");
-  const [endDate, setEndDate] = useState("2024-03-07");
+  const [chartData, setChartData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [startDate, setStartDate] = useState("2024-01-20");
+  const [endDate, setEndDate] = useState("2024-03-20");
   const [selectedChart, setSelectedChart] = useState("crimeType");
 
-  const filterDataByDate = () => {
-    return dummyData.filter((item) => item.date >= startDate && item.date <= endDate);
+  // Function to fetch data from API
+  const fetchData = async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const response = await fetch(
+        `http://localhost:8080/dashboard/pieChartData?fromDate=${startDate}&toDate=${endDate}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+
+      const data = await response.json();
+      setChartData(data);
+    } catch (err) {
+      setError("Error fetching data. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Fetch data whenever startDate or endDate changes
+  useEffect(() => {
+    fetchData();
+  }, [startDate, endDate]);
+
+  // Function to generate chart data
   const generateChartData = () => {
-    const filteredData = filterDataByDate();
+    if (!chartData) return null;
+
     let labels = [];
     let data = [];
     let backgroundColors = [];
 
     const processCounts = (key) => {
-      return filteredData.reduce((acc, crime) => {
+      return chartData.reduce((acc, crime) => {
         acc[crime[key]] = (acc[crime[key]] || 0) + 1;
         return acc;
       }, {});
@@ -45,14 +63,14 @@ const PieChart = () => {
     }
 
     if (selectedChart === "officerCases") {
-      const officerCounts = processCounts("officer");
+      const officerCounts = processCounts("officerName");
       labels = Object.keys(officerCounts);
       data = Object.values(officerCounts);
       backgroundColors = ["#6A0572", "#FF4500", "#008080", "#FF69B4", "#607D8B"];
     }
 
     if (selectedChart === "criminalAnalysis") {
-      const criminalCounts = processCounts("criminal");
+      const criminalCounts = processCounts("criminalName");
       labels = Object.keys(criminalCounts);
       data = Object.values(criminalCounts);
       backgroundColors = ["#1E90FF", "#D2691E", "#A52A2A", "#8A2BE2", "#DC143C"];
@@ -95,9 +113,18 @@ const PieChart = () => {
         </label>
       </div>
 
-      <div className="chart-wrapper">
-        <Pie data={generateChartData()} />
-      </div>
+      {/* Loader while fetching data */}
+      {loading && <div className="loader">Loading data...</div>}
+
+      {/* Error Message */}
+      {error && <div className="error-message">{error}</div>}
+
+      {/* Show chart only when data is available */}
+      {!loading && !error && chartData && (
+        <div className="chart-wrapper">
+          <Pie data={generateChartData()} />
+        </div>
+      )}
     </div>
   );
 };
