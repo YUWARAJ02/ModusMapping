@@ -1,27 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
+import axios from "axios";
 import "./css/CrimeRecords.css";
 
-const dummyData = Array.from({ length: 100 }, (_, i) => ({
-  crimeId: i + 1,
-  criminal: `Criminal ${i + 1}`,
-  crimeType: ["Theft", "Murder", "Assault", "Fraud"][i % 4],
-  location: `Location ${i + 1}`,
-  date: `2024-03-${(i % 30) + 1}`,
-  investigator: `Investigator ${i + 1}`,
-  status: ["Open", "Closed", "Under Investigation"][(i % 3)],
-}));
-
 const CrimeRecords = () => {
+  const [crimeData, setCrimeData] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const recordsPerPage = 30;
-  const pageCount = Math.ceil(dummyData.length / recordsPerPage);
+  const pageCount = Math.ceil(crimeData.length / recordsPerPage);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // API Call to Fetch Data
+  const fetchCrimeData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get("http://localhost:8080/crimes/details");
+      setCrimeData(response.data);
+    } catch (error) {
+      console.error("Error fetching crime records:", error);
+      setError("Failed to load crime records.");
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchCrimeData();
+  }, []);
 
   const handlePageClick = ({ selected }) => {
     setCurrentPage(selected);
   };
 
-  const currentRecords = dummyData.slice(
+  const currentRecords = crimeData.slice(
     currentPage * recordsPerPage,
     (currentPage + 1) * recordsPerPage
   );
@@ -29,37 +41,40 @@ const CrimeRecords = () => {
   return (
     <div className="crime-records-container">
       <h2 className="crime-record-header">Crime Records</h2>
-      {dummyData.length === 0 ? (
+
+      {loading ? (
+        <p className="loading">Loading crime records...</p>
+      ) : error ? (
+        <p className="error">{error}</p>
+      ) : crimeData.length === 0 ? (
         <p className="no-records">No records found</p>
       ) : (
         <>
-        <div className="table-wrapper">
-          <table className="crime-table">
-            <thead>
-              <tr>
-                <th>Crime ID</th>
-                <th>Criminal</th>
-                <th>Crime Type</th>
-                <th>Location</th>
-                <th>Date</th>
-                <th>Investigator</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentRecords.map((crime, index) => (
-                <tr key={index}>
-                  <td>{crime.crimeId || "Unknown"}</td>
-                  <td>{crime.criminal || "Unknown"}</td>
-                  <td>{crime.crimeType || "Unknown"}</td>
-                  <td>{crime.location || "Unknown"}</td>
-                  <td>{crime.date || "Unknown"}</td>
-                  <td>{crime.investigator || "Unknown"}</td>
-                  <td>{crime.status || "Unknown"}</td>
+          <div className="table-wrapper">
+            <table className="crime-table">
+              <thead>
+                <tr>
+                  <th>Crime ID</th>
+                  <th>Criminal(s)</th>
+                  <th>Crime Type</th>
+                  <th>Location</th>
+                  <th>Date</th>
+                  <th>Investigator</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentRecords.map((crime, index) => (
+                  <tr key={index}>
+                    <td>{crime.crimeId || "Unknown"}</td>
+                    <td>{crime.criminalNames || "Unknown"}</td>
+                    <td>{crime.crimeType || "Unknown"}</td>
+                    <td>{crime.crimeLocation || "Unknown"}</td>
+                    <td>{new Date(crime.crimeDate).toLocaleDateString() || "Unknown"}</td>
+                    <td>{crime.investigator || "Unknown"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
           {/* Pagination */}

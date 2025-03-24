@@ -1,6 +1,7 @@
 package com.cyberhackathon.repository.jpa;
 
 import com.cyberhackathon.entity.Crime;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -37,5 +38,8 @@ public interface CrimeRepository extends JpaRepository<Crime, Long> {
             "WHERE c.crimeDate BETWEEN :startDate AND :endDate ")
     List<Crime> findCrimesByOfficerAndCriminal(@Param("startDate") Date startDate,
                                           @Param("endDate") Date endDate);
+
+    @EntityGraph(attributePaths = {"criminals", "criminalCase.officer.user"})
+    List<Crime> findAll();
 }
 

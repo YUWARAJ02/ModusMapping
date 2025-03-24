@@ -23,6 +23,7 @@ public class GraphService {
         final Date from = Helper.getDate(fromDate);
         final Date to = Helper.getDate(toDate);
         var crimeList = crimeRepository.findCrimesGroupedByTypeAndLocation(from,to);
+        System.out.println("hitting through api......");
         return crimeList.stream().map(obj ->
                 new BarGraphData(
                         obj[0].toString(),  // date
