@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./css/CaseRegistration.css";
 
 const CaseRegistration = () => {
@@ -6,7 +6,7 @@ const CaseRegistration = () => {
     caseNumber: "",
     title: "",
     description: "",
-    status: "open",
+    status: "OPEN",
     officerId: "",
     crimeType: "",
     crimeDate: "",
@@ -15,40 +15,88 @@ const CaseRegistration = () => {
     aiSummary: "",
   });
 
-  // Handles input changes
+  const [officers, setOfficers] = useState([]); // Store officers list
+  const [loading, setLoading] = useState(false); // Loading state
+
+  // Fetch officers when component mounts
+  useEffect(() => {
+    fetch("http://localhost:8080/api/users")
+      .then((response) => response.json())
+      .then((data) => setOfficers(data))
+      .catch((error) => console.error("Error fetching officers:", error));
+  }, []);
+
+  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handles form submission
+  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", formData);
+    setLoading(true);
 
-    // TODO: Call API to save case to database
-    // fetch("/api/cases", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify(formData),
-    // }).then(response => response.json()).then(data => console.log(data));
+    const requestBody = {
+      caseNumber: formData.caseNumber,
+      title: formData.title,
+      description: formData.description,
+      status: formData.status.toUpperCase(), // ✅ Ensure ENUM compatibility
+      officerId: parseInt(formData.officerId), // ✅ Send officerId directly
+
+      crimes: [
+        {
+          crimeType: formData.crimeType,
+          crimeDate: new Date(formData.crimeDate).toISOString(), // ✅ Convert to ISO Date format
+          location: formData.location,
+          criminals: formData.criminals
+            ? formData.criminals.split(",").map((c) => ({ name: c.trim() }))
+            : [],
+        },
+      ],
+    };
+
+    console.log("Submitting Case:", requestBody);
+
+    fetch("http://localhost:8080/api/cases", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => {
+        setLoading(false);
+        if (!response.ok) throw new Error("Failed to register case");
+        return response.json();
+      })
+      .then((data) => {
+        alert("✅ Case registered successfully!");
+        console.log("Response:", data);
+        setFormData({
+          caseNumber: "",
+          title: "",
+          description: "",
+          status: "OPEN",
+          officerId: "",
+          crimeType: "",
+          crimeDate: "",
+          location: "",
+          criminals: "",
+          aiSummary: "",
+        });
+      })
+      .catch((error) => {
+        setLoading(false);
+        alert("❌ Failed to register case. Check console for details.");
+        console.error("Error:", error);
+      });
   };
 
-  // Handles AI Summary Generation
+  // AI Summary Generation (Mock Implementation)
   const generateAISummary = () => {
     console.log("Generating AI Summary for:", formData);
-
-    // TODO: Call AI API to generate summary
-    // fetch("/api/ai/generate-summary", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ description: formData.description, crimeType: formData.crimeType }),
-    // })
-    //   .then(response => response.json())
-    //   .then(data => setFormData({ ...formData, aiSummary: data.summary }));
-    
     setFormData({
       ...formData,
-      aiSummary: "Based on historical patterns, this crime might be related to past burglary cases in the area. Possible suspects: John Doe, Mike Ross.",
+      aiSummary:
+        "Based on historical patterns, this crime might be related to past cases in the area. Possible suspects: John Doe, Mike Ross.",
     });
   };
 
@@ -58,41 +106,88 @@ const CaseRegistration = () => {
       <form onSubmit={handleSubmit}>
         {/* Case Details */}
         <label>Case Number:</label>
-        <input type="text" name="caseNumber" value={formData.caseNumber} onChange={handleChange} required />
+        <input
+          type="text"
+          name="caseNumber"
+          value={formData.caseNumber}
+          onChange={handleChange}
+          required
+        />
 
         <label>Title:</label>
-        <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+        <input
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          required
+        />
 
         <label>Description:</label>
-        <textarea name="description" value={formData.description} onChange={handleChange} required />
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          required
+        />
 
         <label>Status:</label>
         <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="open">Open</option>
-          <option value="closed">Closed</option>
+          <option value="OPEN">Open</option>
+          <option value="CLOSED">Closed</option>
         </select>
 
         {/* Officer Assignment */}
         <label>Assign Officer:</label>
-        <select name="officerId" value={formData.officerId} onChange={handleChange} required>
+        <select
+          name="officerId"
+          value={formData.officerId}
+          onChange={handleChange}
+          required
+        >
           <option value="">Select Officer</option>
-          <option value="1">John Doe</option>
-          <option value="2">Jane Smith</option>
-          {/* TODO: Fetch officers dynamically */}
+          {officers.map((officer) => (
+            <option key={officer.id} value={officer.id}>
+              {officer.name}
+            </option>
+          ))}
         </select>
 
         {/* Crime Details */}
         <label>Crime Type:</label>
-        <input type="text" name="crimeType" value={formData.crimeType} onChange={handleChange} required />
+        <input
+          type="text"
+          name="crimeType"
+          value={formData.crimeType}
+          onChange={handleChange}
+          required
+        />
 
         <label>Crime Date:</label>
-        <input type="date" name="crimeDate" value={formData.crimeDate} onChange={handleChange} required />
+        <input
+          type="date"
+          name="crimeDate"
+          value={formData.crimeDate}
+          onChange={handleChange}
+          required
+        />
 
         <label>Crime Location:</label>
-        <input type="text" name="location" value={formData.location} onChange={handleChange} required />
+        <input
+          type="text"
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          required
+        />
 
         <label>Suspected Criminals (Comma Separated):</label>
-        <input type="text" name="criminals" value={formData.criminals} onChange={handleChange} />
+        <input
+          type="text"
+          name="criminals"
+          value={formData.criminals}
+          onChange={handleChange}
+        />
 
         {/* AI Summary Button */}
         <button type="button" className="ai-summary-btn" onClick={generateAISummary}>
@@ -107,7 +202,9 @@ const CaseRegistration = () => {
           </div>
         )}
 
-        <button type="submit" className="submit-btn">Register Case</button>
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? "Registering..." : "Register Case"}
+        </button>
       </form>
     </div>
   );
