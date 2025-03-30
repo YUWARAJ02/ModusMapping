@@ -1,6 +1,9 @@
 package com.cyberhackathon.model;
 
+import com.cyberhackathon.entity.Criminal;
+
 public class CriminalDTO {
+    private String criminalHistory;
     private String name;
     private String alias;
     private String dob;
@@ -8,6 +11,17 @@ public class CriminalDTO {
     private String address;
     private String history;
     private String description;
+    private Long id ;
+
+    public CriminalDTO(Criminal criminal) {
+        this.id = criminal.getId();
+        this.name = criminal.getName();
+        this.alias = criminal.getAlias();
+        this.dob = String.valueOf(criminal.getDob());
+        this.phoneNumber = criminal.getPhoneNumber();
+        this.address = criminal.getAddress();
+        this.criminalHistory = criminal.getCriminalHistory();
+    }
 
     public String getDescription() {
         return description;
@@ -44,6 +58,4 @@ public class CriminalDTO {
     public String getHistory() { return history; }
     public void setHistory(String history) { this.history = history; }
 
-    public CriminalDTO() {
-    }
 }

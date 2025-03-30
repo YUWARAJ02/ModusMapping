@@ -1,27 +1,27 @@
 package com.cyberhackathon.service;
 
-import com.cyberhackathon.entity.Case;
-import com.cyberhackathon.entity.Criminal;
-import com.cyberhackathon.entity.User;
+import com.cyberhackathon.entity.*;
 import com.cyberhackathon.model.*;
-import com.cyberhackathon.repository.jpa.CaseRepository;
+import com.cyberhackathon.repository.jpa.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class CaseReportsService {
 
-
-    private final CaseRepository caseRepository;
     @Autowired
-    public CaseReportsService(CaseRepository caseRepository) {
-        this.caseRepository = caseRepository;
-    }
+    private CaseRepository caseRepository;
+    @Autowired
+    private OfficerRepository officerRepository;
+    @Autowired
+    private CriminalRepository criminalRepository;
+    @Autowired
+    private CrimeRepository crimeRepository;
+    @Autowired
+    private EvidenceRepository evidenceRepository;
 
 
     public List<CaseReportsDTO> getAllCases() {
@@ -102,5 +102,48 @@ public class CaseReportsService {
                         evidence.getAddedBy().getName()
                 )).collect(Collectors.toList())
         );
+    }
+
+    public Map<String, Boolean> insertCase(Long officerId, CreateCaseRequestDTO caseRequest) {
+        Officer officer = officerRepository.findById(officerId)
+                .orElseThrow(() -> new RuntimeException("Officer not found with ID: " + officerId));
+
+        Case newCase = new Case();
+        newCase.setCaseNumber(caseRequest.getCaseNumber());
+        newCase.setTitle(caseRequest.getTitle());
+        newCase.setDescription(caseRequest.getDescription());
+//        newCase.setStatus(caseRequest.getStatus()); todo:check by officer permission
+        newCase.setYear(caseRequest.getYear());
+        newCase.setMonth(caseRequest.getMonth());
+        newCase.setOfficer(officer);
+        caseRepository.save(newCase);
+
+        Crime crime = new Crime();
+        crime.setCriminalCase(newCase);
+        crime.setCrimeDate(java.sql.Date.valueOf(caseRequest.getCrimeDate())); // Convert String to Date
+        crime.setCrimeType(caseRequest.getCrimeType());
+        crime.setLocation(caseRequest.getLocation());
+        crime.setDescription(caseRequest.getCrimeDescription());
+        crimeRepository.save(crime);
+
+        if (caseRequest.getCriminalIds() != null) {
+            List<Criminal> criminals = criminalRepository.findAllById(caseRequest.getCriminalIds());
+            crime.setCriminals(new HashSet<>(criminals));
+            crimeRepository.save(crime);
+        }
+
+        // 🔹 Add Evidence & Link to Case
+        if (caseRequest.getEvidences() != null) {
+            for (EvidenceRequestDTO evidenceReq : caseRequest.getEvidences()) {
+                Evidence evidence = new Evidence();
+                evidence.setCriminalCase(newCase);
+                evidence.setEvidenceType(evidenceReq.getEvidenceType());
+                evidence.setDescription(evidenceReq.getDescription());
+                evidence.setAddedBy(officer.getUser());  // Officer is linked to a user
+                evidenceRepository.save(evidence);
+            }
+        }
+
+        return Map.of("ans", true);
     }
 }
