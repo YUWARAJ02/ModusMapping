@@ -86,8 +86,8 @@ const CaseRegistration = () => {
         if (!res.ok) throw new Error("Failed to register case");
         return res.json();
       })
-      .then(() => {
-        alert("✅ Case registered successfully!");
+      .then((data) => {
+        alert(`✅ ${data.ans}`);;
         setFormData({
           caseNumber: "",
           title: "",
