@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Pie } from "react-chartjs-2";
 import "./css/PieChart.css";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import Loader from "./Loader"; // adjust the path if necessary
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -115,7 +116,7 @@ const PieChart = () => {
       </div>
 
       {/* Loader while fetching data */}
-      {loading && <div className="loader">Loading data...</div>}
+      {loading && <Loader/>}
 
       {/* Error Message */}
       {error && <div className="error-message">{error}</div>}

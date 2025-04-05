@@ -11,27 +11,49 @@ const CaseRegistration = () => {
     crimeType: "",
     crimeDate: "",
     location: "",
-    criminals: "",
-    aiSummary: "",
+    crimeDescription: "",
+    criminalSelections: [""], // new: dynamic dropdowns
+    evidences: [{ evidenceType: "", description: "" }],
   });
 
-  const [officers, setOfficers] = useState([]); // Store officers list
-  const [loading, setLoading] = useState(false); // Loading state
+  const [officers, setOfficers] = useState([]);
+  const [criminals, setCriminals] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch officers when component mounts
   useEffect(() => {
     fetch("http://localhost:8080/api/users")
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => setOfficers(data))
-      .catch((error) => console.error("Error fetching officers:", error));
+      .catch((err) => console.error("Error fetching officers:", err));
+
+    fetch("http://localhost:8080/api/criminals")
+      .then((res) => res.json())
+      .then((data) => setCriminals(data))
+      .catch((err) => console.error("Error fetching criminals:", err));
   }, []);
 
-  // Handle input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission
+  const handleCriminalChange = (index, value) => {
+    const updatedSelections = [...formData.criminalSelections];
+    updatedSelections[index] = value;
+    setFormData({ ...formData, criminalSelections: updatedSelections });
+  };
+
+  const handleAddCriminal = () => {
+    setFormData({
+      ...formData,
+      criminalSelections: [...formData.criminalSelections, ""],
+    });
+  };
+
+  const getAvailableCriminals = (currentIndex) => {
+    const selected = formData.criminalSelections.filter((_, i) => i !== currentIndex);
+    return criminals.filter((c) => !selected.includes(c.id.toString()));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,37 +61,32 @@ const CaseRegistration = () => {
     const requestBody = {
       caseNumber: formData.caseNumber,
       title: formData.title,
+      officerId: parseInt(formData.officerId),
       description: formData.description,
-      status: formData.status.toUpperCase(), // ✅ Ensure ENUM compatibility
-      officerId: parseInt(formData.officerId), // ✅ Send officerId directly
-
-      crimes: [
-        {
-          crimeType: formData.crimeType,
-          crimeDate: new Date(formData.crimeDate).toISOString(), // ✅ Convert to ISO Date format
-          location: formData.location,
-          criminals: formData.criminals
-            ? formData.criminals.split(",").map((c) => ({ name: c.trim() }))
-            : [],
-        },
-      ],
+      year: new Date(formData.crimeDate).getFullYear(),
+      month: new Date(formData.crimeDate).getMonth() + 1,
+      crimeType: formData.crimeType,
+      crimeDate: formData.crimeDate,
+      location: formData.location,
+      crimeDescription: formData.crimeDescription,
+      criminalIds: formData.criminalSelections.map((id) => parseInt(id)),
+      evidences: formData.evidences,
     };
 
     console.log("Submitting Case:", requestBody);
 
-    fetch("http://localhost:8080/api/cases", {
+    fetch("http://localhost:8080/api/cases/create/1", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),
     })
-      .then((response) => {
+      .then((res) => {
         setLoading(false);
-        if (!response.ok) throw new Error("Failed to register case");
-        return response.json();
+        if (!res.ok) throw new Error("Failed to register case");
+        return res.json();
       })
-      .then((data) => {
+      .then(() => {
         alert("✅ Case registered successfully!");
-        console.log("Response:", data);
         setFormData({
           caseNumber: "",
           title: "",
@@ -79,128 +96,112 @@ const CaseRegistration = () => {
           crimeType: "",
           crimeDate: "",
           location: "",
-          criminals: "",
-          aiSummary: "",
+          crimeDescription: "",
+          criminalSelections: [""],
+          evidences: [{ evidenceType: "", description: "" }],
         });
       })
-      .catch((error) => {
+      .catch((err) => {
         setLoading(false);
-        alert("❌ Failed to register case. Check console for details.");
-        console.error("Error:", error);
+        alert("❌ Failed to register case.");
+        console.error(err);
       });
-  };
-
-  // AI Summary Generation (Mock Implementation)
-  const generateAISummary = () => {
-    console.log("Generating AI Summary for:", formData);
-    setFormData({
-      ...formData,
-      aiSummary:
-        "Based on historical patterns, this crime might be related to past cases in the area. Possible suspects: John Doe, Mike Ross.",
-    });
   };
 
   return (
     <div className="case-registration-container">
       <h2>Register a New Case</h2>
       <form onSubmit={handleSubmit}>
-        {/* Case Details */}
         <label>Case Number:</label>
-        <input
-          type="text"
-          name="caseNumber"
-          value={formData.caseNumber}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="caseNumber" value={formData.caseNumber} onChange={handleChange} required />
 
         <label>Title:</label>
-        <input
-          type="text"
-          name="title"
-          value={formData.title}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="title" value={formData.title} onChange={handleChange} required />
 
         <label>Description:</label>
-        <textarea
-          name="description"
-          value={formData.description}
-          onChange={handleChange}
-          required
-        />
+        <textarea name="description" value={formData.description} onChange={handleChange} required />
 
-        <label>Status:</label>
-        <select name="status" value={formData.status} onChange={handleChange}>
-          <option value="OPEN">Open</option>
-          <option value="CLOSED">Closed</option>
-        </select>
-
-        {/* Officer Assignment */}
         <label>Assign Officer:</label>
-        <select
-          name="officerId"
-          value={formData.officerId}
-          onChange={handleChange}
-          required
-        >
+        <select name="officerId" value={formData.officerId} onChange={handleChange} required>
           <option value="">Select Officer</option>
           {officers.map((officer) => (
-            <option key={officer.id} value={officer.id}>
-              {officer.name}
-            </option>
+            <option key={officer.id} value={officer.id}>{officer.name}</option>
           ))}
         </select>
 
-        {/* Crime Details */}
         <label>Crime Type:</label>
-        <input
-          type="text"
-          name="crimeType"
-          value={formData.crimeType}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="crimeType" value={formData.crimeType} onChange={handleChange} required />
 
         <label>Crime Date:</label>
-        <input
-          type="date"
-          name="crimeDate"
-          value={formData.crimeDate}
-          onChange={handleChange}
-          required
-        />
+        <input type="date" name="crimeDate" value={formData.crimeDate} onChange={handleChange} required />
 
         <label>Crime Location:</label>
-        <input
-          type="text"
-          name="location"
-          value={formData.location}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" name="location" value={formData.location} onChange={handleChange} required />
 
-        <label>Suspected Criminals (Comma Separated):</label>
-        <input
-          type="text"
-          name="criminals"
-          value={formData.criminals}
-          onChange={handleChange}
-        />
+        <label>Crime Description:</label>
+        <textarea name="crimeDescription" value={formData.crimeDescription} onChange={handleChange} required />
 
-        {/* AI Summary Button */}
-        <button type="button" className="ai-summary-btn" onClick={generateAISummary}>
-          Generate AI Summary
-        </button>
-
-        {/* Display AI Summary */}
-        {formData.aiSummary && (
-          <div className="ai-summary-box">
-            <h3>AI Generated Summary:</h3>
-            <p>{formData.aiSummary}</p>
+        <label>Suspected Criminals:</label>
+        {formData.criminalSelections.map((value, index) => (
+          <div key={index} className="criminal-row">
+            <select
+              value={value}
+              onChange={(e) => handleCriminalChange(index, e.target.value)}
+              required
+            >
+              <option value="">Select Criminal</option>
+              {getAvailableCriminals(index).map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name} ({c.alias})
+                </option>
+              ))}
+            </select>
           </div>
+        ))}
+        {formData.criminalSelections.length < criminals.length && (
+          <button type="button" onClick={handleAddCriminal}>
+            ➕ Add Criminal
+          </button>
         )}
+        <label>Evidence List:</label>
+{formData.evidences.map((evidence, index) => (
+  <div key={index} className="evidence-row">
+    <input
+      type="text"
+      placeholder="Evidence Type"
+      value={evidence.evidenceType}
+      onChange={(e) => {
+        const updated = [...formData.evidences];
+        updated[index].evidenceType = e.target.value;
+        setFormData({ ...formData, evidences: updated });
+      }}
+      required
+    />
+    <input
+      type="text"
+      placeholder="Description"
+      value={evidence.description}
+      onChange={(e) => {
+        const updated = [...formData.evidences];
+        updated[index].description = e.target.value;
+        setFormData({ ...formData, evidences: updated });
+      }}
+      required
+    />
+  </div>
+))}
+<button
+  type="button"
+  onClick={() =>
+    setFormData({
+      ...formData,
+      evidences: [...formData.evidences, { evidenceType: "", description: "" }],
+    })
+  }
+>
+  ➕ Add Evidence
+</button>
+
 
         <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Registering..." : "Register Case"}

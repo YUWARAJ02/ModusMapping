@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.neo4j.core.schema.Node;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -36,6 +37,7 @@ public class Criminal {
     private String criminalHistory;
 
     @ManyToMany(mappedBy = "criminals")
+    @Relationship(type = "COMMITTED")
     private Set<Crime> crimes = new HashSet<>();
 
     public Long getId() {

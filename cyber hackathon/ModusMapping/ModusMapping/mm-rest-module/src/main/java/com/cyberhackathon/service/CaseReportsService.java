@@ -89,6 +89,7 @@ public class CaseReportsService {
                 caseEntity.getCrimes().stream()
                         .flatMap(crime -> crime.getCriminals().stream())
                         .map(criminal -> new CriminalDTO(
+                                criminal.getId(),
                                 criminal.getName(),
                                 criminal.getAlias(),
                                 String.valueOf(criminal.getDob()),
@@ -105,8 +106,11 @@ public class CaseReportsService {
     }
 
     public Map<String, Boolean> insertCase(Long officerId, CreateCaseRequestDTO caseRequest) {
-        Officer officer = officerRepository.findById(officerId)
-                .orElseThrow(() -> new RuntimeException("Officer not found with ID: " + officerId));
+        Officer user = officerRepository.findById(officerId)
+                .orElseThrow(() -> new RuntimeException("user not found with ID: " + officerId));
+
+        Officer officer = officerRepository.findById(caseRequest.getOfficerId())
+                .orElseThrow(() -> new RuntimeException("Officer not found with ID: " + caseRequest.getOfficerId()));
 
         Case newCase = new Case();
         newCase.setCaseNumber(caseRequest.getCaseNumber());
@@ -146,4 +150,33 @@ public class CaseReportsService {
 
         return Map.of("ans", true);
     }
+
+    public List<CaseReportsDTO> getAllCasesWaitingForApproval() {
+        return caseRepository.findByStatus(Case.CaseStatus.WAITING_FOR_APPROVAL).stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public boolean updateCaseStatus(Long caseId) {
+
+        Optional<Case> optionalCase = caseRepository.findById(caseId);
+        if (optionalCase.isPresent()) {
+            Case caseEntity = optionalCase.get();
+            caseEntity.setStatus(Case.CaseStatus.OPEN);
+            caseRepository.save(caseEntity);
+            return true;
+        }
+        return false;
+    }
+
+
+    public boolean deleteCaseById(Long id) {
+        if (caseRepository.existsById(id)) {
+            caseRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

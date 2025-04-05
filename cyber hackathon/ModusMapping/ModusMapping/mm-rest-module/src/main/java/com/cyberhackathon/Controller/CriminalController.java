@@ -27,4 +27,9 @@ public class CriminalController {
         Criminal savedCriminal = criminalService.saveCriminal(criminal);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCriminal);
     }
+
+    @GetMapping("/criminals/network")
+    public List<Criminal> getCriminalNetwork() {
+        return criminalService.getCriminalNetwork();
+    }
 }

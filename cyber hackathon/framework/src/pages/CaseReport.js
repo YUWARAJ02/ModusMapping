@@ -1,31 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import "./css/CaseReport.css"; // Custom styling
+import "./css/CaseReport.css";
+import Loader from "../components/Loader";
+import Failure from "../components/Failure"; // ✅ Importing the Failure component
 
 const CaseReport = () => {
-  const { caseId } = useParams(); // Retrieve case ID from URL params
+  const { caseId } = useParams();
   const [caseDetails, setCaseDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchCaseDetails = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8080/api/cases/${caseId}`);
-        setCaseDetails(response.data);
-      } catch (err) {
-        setError("Failed to fetch case details.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchCaseDetails = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await axios.get(`http://localhost:8080/api/cases/${caseId}`);
+      setCaseDetails(response.data);
+    } catch (err) {
+      setError("Failed to fetch case details.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCaseDetails();
   }, [caseId]);
 
-  if (loading) return <p className="loading">Loading case details...</p>;
-  if (error) return <p className="error">{error}</p>;
+  if (loading) return <Loader />;
+  if (error) return <Failure onRetry={fetchCaseDetails} />; // ✅ Displaying animated failure
 
   return (
     <div className="case-report-grid">

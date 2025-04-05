@@ -11,7 +11,23 @@ public class CriminalDTO {
     private String address;
     private String history;
     private String description;
-    private Long id ;
+    private Long id;
+
+    public String getCriminalHistory() {
+        return criminalHistory;
+    }
+
+    public void setCriminalHistory(String criminalHistory) {
+        this.criminalHistory = criminalHistory;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public CriminalDTO(Criminal criminal) {
         this.id = criminal.getId();
@@ -31,7 +47,8 @@ public class CriminalDTO {
         this.description = description;
     }
 
-    public CriminalDTO(String name, String alias, String dob, String phoneNumber, String address, String history) {
+    public CriminalDTO(Long id, String name, String alias, String dob, String phoneNumber, String address, String history) {
+        this.id = id;
         this.name = name;
         this.alias = alias;
         this.dob = dob;
@@ -40,22 +57,52 @@ public class CriminalDTO {
         this.history = history;
     }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
 
-    public String getAlias() { return alias; }
-    public void setAlias(String alias) { this.alias = alias; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getDob() { return dob; }
-    public void setDob(String dob) { this.dob = dob; }
+    public String getAlias() {
+        return alias;
+    }
 
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public String getDob() {
+        return dob;
+    }
 
-    public String getHistory() { return history; }
-    public void setHistory(String history) { this.history = history; }
+    public void setDob(String dob) {
+        this.dob = dob;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getHistory() {
+        return history;
+    }
+
+    public void setHistory(String history) {
+        this.history = history;
+    }
 
 }

@@ -20,4 +20,11 @@ public interface CaseRepository extends JpaRepository<Case, Long> {
             "LEFT JOIN FETCH c.evidence e " +
             "WHERE c.id = :caseId")
     Optional<Case> findCaseReportById(Long caseId);
+    List<Case> findByStatus(Case.CaseStatus status);
+
+    Optional<Case> findByCaseNumber(String caseNum);
+
+    Long countByStatus(Case.CaseStatus status);
+
+    Optional<Case> findTopByOrderByIdDesc();
 }

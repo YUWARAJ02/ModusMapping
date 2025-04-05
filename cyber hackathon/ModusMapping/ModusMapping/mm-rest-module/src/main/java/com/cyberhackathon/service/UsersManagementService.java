@@ -18,6 +18,7 @@ public class UsersManagementService {
     public List<UsersDTO> getAllUsers() {
         List<User> users = usersRepository.findAllUsersWithRoles();
         return users.stream().map(user -> new UsersDTO(
+                user.getId(),
                 user.getName(),
                 user.getEmail(),
                 user.getPhoneNumber(),

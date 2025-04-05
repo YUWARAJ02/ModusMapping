@@ -28,7 +28,7 @@ public class Case {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CaseStatus status = CaseStatus.OPEN;
+    private CaseStatus status = CaseStatus.WAITING_FOR_APPROVAL;
 
     @ManyToOne
     @JoinColumn(name = "officer_id", nullable = false)
@@ -53,7 +53,7 @@ public class Case {
     private int month;
 
     public enum CaseStatus {
-        OPEN, CLOSED
+        OPEN, CLOSED, WAITING_FOR_APPROVAL
     }
 
     public Long getId() {

@@ -1,33 +1,35 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // Import Axios
-import "./css/UserManagement.css"; // Import styles
+import axios from "axios";
+import "./css/UserManagement.css";
+import Loader from "../components/Loader";
+import Failure from "../components/Failure"; // ⬅️ Import the failure component
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([]); // Store users from API
-  const [loading, setLoading] = useState(true); // Show loader until data is fetched
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null); // ⬅️ Error state
   const [currentPage, setCurrentPage] = useState(1);
-  const usersPerPage = 10; // Users per page
+  const usersPerPage = 10;
 
-  // Fetch users from API using Axios
+  const fetchUsers = async () => {
+    setLoading(true);
+    setError(null); // Reset error on new fetch
+    try {
+      const response = await axios.get("http://localhost:8080/api/users");
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      setError("Oops! Something went wrong while fetching users.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await axios.get("http://localhost:8080/api/users");
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      } finally {
-        setLoading(false); // Hide loader after fetching
-      }
-    };
-
     fetchUsers();
   }, []);
 
-  // Calculate total pages
   const totalPages = Math.ceil(users.length / usersPerPage);
-
-  // Get users for the current page
   const startIndex = (currentPage - 1) * usersPerPage;
   const currentUsers = users.slice(startIndex, startIndex + usersPerPage);
 
@@ -36,7 +38,11 @@ const UserManagement = () => {
       <h2>Registered Officers</h2>
 
       {loading ? (
-        <div className="loading">Loading users...</div>
+        <Loader />
+      ) : error ? (
+        <div style={{ position: "relative", minHeight: "300px" }}>
+          <Failure onRetry={fetchUsers} />
+        </div>
       ) : (
         <div className="user-table">
           <table>
@@ -66,7 +72,6 @@ const UserManagement = () => {
             </tbody>
           </table>
 
-          {/* Pagination Controls */}
           {users.length > usersPerPage && (
             <div className="pagination">
               <button 

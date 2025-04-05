@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 import axios from "axios";
 import "./css/CrimeRecords.css";
+import Loader from "../components/Loader";
+import Failure from "../components/Failure"; // ✅ Import Failure Component
 
 const CrimeRecords = () => {
   const [crimeData, setCrimeData] = useState([]);
@@ -21,8 +23,9 @@ const CrimeRecords = () => {
     } catch (error) {
       console.error("Error fetching crime records:", error);
       setError("Failed to load crime records.");
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
@@ -43,9 +46,11 @@ const CrimeRecords = () => {
       <h2 className="crime-record-header">Crime Records</h2>
 
       {loading ? (
-        <p className="loading">Loading crime records...</p>
+        <Loader />
       ) : error ? (
-        <p className="error">{error}</p>
+        <div style={{ position: "relative", minHeight: "300px" }}>
+          <Failure onRetry={fetchCrimeData} />
+        </div>
       ) : crimeData.length === 0 ? (
         <p className="no-records">No records found</p>
       ) : (

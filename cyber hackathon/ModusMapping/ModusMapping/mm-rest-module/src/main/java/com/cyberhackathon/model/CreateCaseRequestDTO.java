@@ -4,9 +4,9 @@ import java.util.List;
 
 public class CreateCaseRequestDTO {
     private String caseNumber;
+    private Long officerId;
     private String title;
     private String description;
-    private String status;  // "open" or "closed"
     private int year;
     private int month;
 
@@ -40,14 +40,6 @@ public class CreateCaseRequestDTO {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public int getYear() {
@@ -114,11 +106,19 @@ public class CreateCaseRequestDTO {
         this.evidences = evidences;
     }
 
-    public CreateCaseRequestDTO(String caseNumber, String title, String description, String status, int year, int month, String crimeType, String crimeDate, String location, String crimeDescription, List<Long> criminalIds, List<EvidenceRequestDTO> evidences) {
+    public Long getOfficerId() {
+        return officerId;
+    }
+
+    public void setOfficerId(Long officerId) {
+        this.officerId = officerId;
+    }
+
+    public CreateCaseRequestDTO(String caseNumber, Long officerId, String title, String description, int year, int month, String crimeType, String crimeDate, String location, String crimeDescription, List<Long> criminalIds, List<EvidenceRequestDTO> evidences) {
         this.caseNumber = caseNumber;
+        this.officerId = officerId;
         this.title = title;
         this.description = description;
-        this.status = status;
         this.year = year;
         this.month = month;
         this.crimeType = crimeType;

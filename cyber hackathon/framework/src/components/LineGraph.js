@@ -12,6 +12,8 @@ import {
   Legend,
 } from "chart.js";
 import "./css/LineGraph.css";
+import Loader from "./Loader"; // adjust the path if necessary
+
 
 // Register Chart.js components
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.neo4j.core.schema.Relationship;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -18,6 +19,7 @@ public class Crime {
 
     @ManyToOne
     @JoinColumn(name = "case_id", nullable = false)
+    @Relationship(type = "PART_OF")
     private Case criminalCase;
 
     @Column(name = "crime_date", nullable = false)
