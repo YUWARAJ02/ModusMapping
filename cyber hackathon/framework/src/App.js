@@ -19,24 +19,35 @@ import CaseRegistration from "./pages/CaseRegistration";
 import AboutUs from "./pages/AboutUs";
 
 function App() {
-  // Get login status from session storage
+  // Get login status & role from session storage
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return sessionStorage.getItem("isLoggedIn") === "true";
   });
 
+  const [role, setRole] = useState(() => {
+    return sessionStorage.getItem("role") || "";
+  });
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  // Function to handle login
+  // Login handler (from Login page)
   const handleLogin = () => {
     sessionStorage.setItem("isLoggedIn", "true");
     setIsLoggedIn(true);
+    setRole(sessionStorage.getItem("role"));
   };
 
-  // Function to handle logout
+  // Logout handler
   const handleLogout = () => {
-    sessionStorage.setItem("isLoggedIn", "false");
+    sessionStorage.clear();
     setIsLoggedIn(false);
+    setRole("");
   };
+
+  // Role checks
+  const isAdmin = role === "ADMIN";
+  const isEditor = role === "EDITOR";
+  const isAdminOrEditor = isAdmin || isEditor;
 
   return (
     <div className={isLoggedIn ? `app-container ${sidebarOpen ? "" : "collapsed"}` : "login-container"}>
@@ -61,10 +72,13 @@ function App() {
               <Route path="/criminal-network" element={<CriminalNetwork />} />
               <Route path="/case-reports" element={<CaseReports />} />
               <Route path="/case/:caseId" element={<CaseReport />} />
-              <Route path="/approval" element={<Approval />} />
               <Route path="/user-management" element={<UserManagement />} />
-              <Route path="/case-registration" element={<CaseRegistration />} />
-              <Route path="/about-us" element={<AboutUs/>} />
+              <Route path="/about-us" element={<AboutUs />} />
+              <Route path="/settings" element={<Settings />} />
+              {/* Conditional Routes based on role */}
+              {isAdminOrEditor && <Route path="/case-registration" element={<CaseRegistration />} />}
+              {isAdmin && <Route path="/approval" element={<Approval />} />}
+              {/* Fallback */}
               <Route path="*" element={<Navigate to="/" />} />
             </Routes>
           </div>

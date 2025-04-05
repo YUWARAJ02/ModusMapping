@@ -3,23 +3,41 @@ import { useNavigate } from "react-router-dom";
 import "./css/Login.css";
 
 const Login = ({ setIsLoggedIn }) => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");         // renamed to email
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Hardcoded credentials for now (replace with API call later)
-    const validUsername = "admin";
-    const validPassword = "password123";
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (username === validUsername && password === validPassword) {
-      setIsLoggedIn(true);
-      navigate("/"); // Redirect to Dashboard after login
-    } else {
-      setError("Invalid username or password");
+      const data = await response.json();
+
+      if (data.userId && data.role) {
+        // Store in sessionStorage
+        sessionStorage.setItem("userId", data.userId);
+        sessionStorage.setItem("role", data.role);
+
+        alert(data.message || "Login successful!");
+        setIsLoggedIn(true);
+        navigate("/"); // Redirect to Dashboard
+      } else {
+        setError(data.message || "Invalid credentials");
+        alert(data.message || "Invalid credentials");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setError("Something went wrong");
+      alert("Server error. Please try again.");
     }
   };
 
@@ -31,9 +49,9 @@ const Login = ({ setIsLoggedIn }) => {
         <form onSubmit={handleLogin}>
           <input
             type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
           <input

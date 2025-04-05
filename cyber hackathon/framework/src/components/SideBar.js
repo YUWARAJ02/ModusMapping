@@ -3,6 +3,7 @@ import { FaBars, FaTachometerAlt, FaDatabase, FaChartBar, FaNetworkWired, FaFile
 import "./css/SideBar.css";
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
+  const role = sessionStorage.getItem("role");
   return (
     <nav className={`sidebar ${sidebarOpen ? "" : "collapsed"}`}>
       <div className="menu-icon" onClick={() => setSidebarOpen(!sidebarOpen)}>
@@ -15,7 +16,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
         <li><Link to="/criminal-network"><FaNetworkWired /><span className="menu-text"> Criminal Network</span></Link></li>
         <li><Link to="/case-reports"><FaFileAlt /><span className="menu-text"> Case Reports</span></Link></li>
         <li><Link to="/user-management"><FaUsersCog /><span className="menu-text"> User Management</span></Link></li>
-        <li><Link to="/approval"><FaCheckCircle /><span className="menu-text"> Approval</span></Link></li>
+        {role === "ADMIN" && (<li><Link to="/approval"><FaCheckCircle /><span className="menu-text"> Approval</span></Link></li>)}
         <li><Link to="/about-us"><FaInfoCircle /><span className="menu-text"> AboutUs</span></Link></li>
       </ul>
     </nav>
