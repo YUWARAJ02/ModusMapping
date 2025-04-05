@@ -41,7 +41,7 @@ CREATE TABLE cases (
     case_number VARCHAR(50) UNIQUE NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
-    status ENUM('open', 'closed') DEFAULT 'open',
+    status ENUM('open', 'closed', 'waiting_for_approval') DEFAULT 'waiting_for_approval',
     officer_id INT,
     year INT,
     month INT,
