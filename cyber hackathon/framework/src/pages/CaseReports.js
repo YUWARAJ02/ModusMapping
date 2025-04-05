@@ -15,6 +15,7 @@ const CaseReports = () => {
   const [criminalNameFilter, setCriminalNameFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
+  const role = sessionStorage.getItem("role");
 
   const fetchCaseData = () => {
     setLoading(true);
@@ -76,9 +77,12 @@ const CaseReports = () => {
               value={criminalNameFilter}
               onChange={(e) => setCriminalNameFilter(e.target.value)}
             />
-            <button className="register-case-btn" onClick={() => navigate("/case-registration")}>
-              Register New Case
-            </button>
+            {(role === "ADMIN" || role === "EDITOR") && (
+  <button className="register-case-btn" onClick={() => navigate("/case-registration")}>
+    Register New Case
+  </button>
+)}
+
           </div>
 
           <div className="case-table-container">

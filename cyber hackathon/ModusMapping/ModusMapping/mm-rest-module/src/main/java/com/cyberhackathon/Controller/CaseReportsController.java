@@ -32,7 +32,7 @@ public class CaseReportsController {
 
     @PostMapping("/cases/create/{officerId}")
     @Transactional
-    public Map<String, Boolean> createCase(@PathVariable Long officerId,
+    public Map<String, String> createCase(@PathVariable Long officerId,
                                            @RequestBody CreateCaseRequestDTO caseRequest) {
         return caseReportsService.insertCase(officerId, caseRequest);
     }

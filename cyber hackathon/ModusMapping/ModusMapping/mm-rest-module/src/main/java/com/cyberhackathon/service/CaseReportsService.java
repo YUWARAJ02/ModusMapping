@@ -105,18 +105,18 @@ public class CaseReportsService {
         );
     }
 
-    public Map<String, Boolean> insertCase(Long officerId, CreateCaseRequestDTO caseRequest) {
+    public Map<String, String> insertCase(Long officerId, CreateCaseRequestDTO caseRequest) {
         Officer user = officerRepository.findById(officerId)
                 .orElseThrow(() -> new RuntimeException("user not found with ID: " + officerId));
 
         Officer officer = officerRepository.findById(caseRequest.getOfficerId())
                 .orElseThrow(() -> new RuntimeException("Officer not found with ID: " + caseRequest.getOfficerId()));
-
+        boolean isAdmin = user.getUser().getRole().getRoleName() == Role.RoleType.ADMIN;
         Case newCase = new Case();
         newCase.setCaseNumber(caseRequest.getCaseNumber());
         newCase.setTitle(caseRequest.getTitle());
         newCase.setDescription(caseRequest.getDescription());
-//        newCase.setStatus(caseRequest.getStatus()); todo:check by officer permission
+        newCase.setStatus(isAdmin ? Case.CaseStatus.OPEN : Case.CaseStatus.WAITING_FOR_APPROVAL);
         newCase.setYear(caseRequest.getYear());
         newCase.setMonth(caseRequest.getMonth());
         newCase.setOfficer(officer);
@@ -148,7 +148,7 @@ public class CaseReportsService {
             }
         }
 
-        return Map.of("ans", true);
+        return Map.of("ans", isAdmin ? "Case is registered successfully with open status" : "Case sent for approval from admin");
     }
 
     public List<CaseReportsDTO> getAllCasesWaitingForApproval() {

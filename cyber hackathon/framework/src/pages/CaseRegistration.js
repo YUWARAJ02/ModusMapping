@@ -72,10 +72,11 @@ const CaseRegistration = () => {
       criminalIds: formData.criminalSelections.map((id) => parseInt(id)),
       evidences: formData.evidences,
     };
+    const userId = sessionStorage.getItem("userId"); 
 
     console.log("Submitting Case:", requestBody);
 
-    fetch("http://localhost:8080/api/cases/create/1", {
+    fetch(`http://localhost:8080/api/cases/create/${userId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(requestBody),
